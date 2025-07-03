@@ -20,7 +20,7 @@
     "main": "lib/confettis.esm.js",
     "jsdelivr": "lib/confettis.min.js",
     "types": "lib/types.d.ts",
-    "homepage": "https://github.com/sizoroot/confettis",
+    "homepage": "https://confettis.sizo.dev",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/sizoroot/confettis.git"
