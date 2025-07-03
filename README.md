@@ -1,12 +1,12 @@
 ![Confettis](https://i.imgur.com/kpJt6R7.png)
 
 [![NPM](https://img.shields.io/npm/v/confettis.svg)](https://www.npmjs.com/package/confettis)
-[![GitHub Issues](https://img.shields.io/github/issues/ovniroto/confettis)](https://github.com/ovniroto/confettis/issues)
-[![GitHub Tag](https://img.shields.io/github/tag/ovniroto/confettis.svg)](https://github.com/ovniroto/confettis/tags)
-[![GitHub Commits](https://img.shields.io/github/commit-activity/t/ovniroto/confettis)](https://github.com/ovniroto/confettis/commits/main/)
-[![GitHub License](https://img.shields.io/github/license/ovniroto/confettis)](https://github.com/ovniroto/confettis/blob/main/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/sizoroot/confettis)](https://github.com/sizoroot/confettis/issues)
+[![GitHub Tag](https://img.shields.io/github/tag/sizoroot/confettis.svg)](https://github.com/sizoroot/confettis/tags)
+[![GitHub Commits](https://img.shields.io/github/commit-activity/t/sizoroot/confettis)](https://github.com/sizoroot/confettis/commits/main/)
+[![GitHub License](https://img.shields.io/github/license/sizoroot/confettis)](https://github.com/sizoroot/confettis/blob/main/LICENSE)
 
-# 🎉 Confettis v0.3.7
+# 🎉 Confettis v0.3.8
 
 Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 
@@ -20,22 +20,22 @@ Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 * 😄 Super easy to use!
 
 ### Demo
-[confettis.ovni.dev](https://confettis.ovni.dev)
+[confettis.sizo.dev](https://confettis.sizo.dev)
 
 ### Resources
-- [Documentation](https://confettis.ovni.dev/docs)
-- [Changelog](https://github.com/ovniroto/confettis/blob/main/CHANGELOG.md)
+- [Documentation](https://confettis.sizo.dev/docs)
+- [Changelog](https://github.com/sizoroot/confettis/blob/main/CHANGELOG.md)
 
 ## Installation
 
 Browser:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/confettis@0.3.7/lib/confettis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/confettis@0.3.8/lib/confettis.min.js"></script>
 ```
 
 Deno:
 ```js
-import * as confetti from 'https://esm.sh/confettis@0.3.7'
+import * as confetti from 'https://esm.sh/confettis@0.3.8'
 ```
 
 Node:

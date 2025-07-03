@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.3.8
+
+Release 3 jul 2025
+
+  * Up version to republish on npm
+
 ### 0.3.7
 
 Release 25 oct 2024

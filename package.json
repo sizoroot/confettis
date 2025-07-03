@@ -1,6 +1,6 @@
 {
     "name": "confettis",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "description": "Confettis 🎉 for web!",
     "keywords": [
         "canvas",
@@ -13,17 +13,17 @@
     "license": "MIT",
     "author": {
         "name": "Lucas O. S.",
-        "email": "hi@ovni.dev",
-        "url": "https://ovni.dev"
+        "email": "lucas@sizo.dev",
+        "url": "https://sizo.dev"
     },
     "type": "module",
     "main": "lib/confettis.esm.js",
     "jsdelivr": "lib/confettis.min.js",
     "types": "lib/types.d.ts",
-    "homepage": "https://github.com/ovniroto/confettis",
+    "homepage": "https://github.com/sizoroot/confettis",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ovniroto/confettis.git"
+        "url": "git+https://github.com/sizoroot/confettis.git"
     },
     "files": [
         "lib"
