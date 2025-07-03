@@ -1,4 +1,4 @@
-![Confettis](https://i.imgur.com/kpJt6R7.png)
+![Confettis](https://i.imgur.com/o9efxRG.png)
 
 [![NPM](https://img.shields.io/npm/v/confettis.svg)](https://www.npmjs.com/package/confettis)
 [![GitHub Issues](https://img.shields.io/github/issues/sizoroot/confettis)](https://github.com/sizoroot/confettis/issues)
@@ -23,7 +23,6 @@ Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 [confettis.sizo.dev](https://confettis.sizo.dev)
 
 ### Resources
-- [Documentation](https://confettis.sizo.dev/docs)
 - [Changelog](https://github.com/sizoroot/confettis/blob/main/CHANGELOG.md)
 
 ## Installation
@@ -68,7 +67,7 @@ confetti.create({
 })
 ```
 
-This is just an example, but you can do anything. I recommend you look at the examples I have put on the web! See more examples [here](https://confettis.ovni.dev)!
+This is just an example, but you can do anything. I recommend you look at the examples I have put on the web! See more examples [here](https://confettis.sizo.dev)!
 
 ## Parameters
 
