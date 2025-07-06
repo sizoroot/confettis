@@ -6,7 +6,7 @@
 [![GitHub Commits](https://img.shields.io/github/commit-activity/t/sizoroot/confettis)](https://github.com/sizoroot/confettis/commits/main/)
 [![GitHub License](https://img.shields.io/github/license/sizoroot/confettis)](https://github.com/sizoroot/confettis/blob/main/LICENSE)
 
-# 🎉 Confettis v0.3.8
+# 🎉 Confettis v0.3.9
 
 Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 
@@ -29,12 +29,12 @@ Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 
 Browser:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/confettis@0.3.8/lib/confettis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/confettis@0.3.9/lib/confettis.min.js"></script>
 ```
 
 Deno:
 ```js
-import * as confetti from 'https://esm.sh/confettis@0.3.8'
+import * as confetti from 'https://esm.sh/confettis@0.3.9'
 ```
 
 Node:
@@ -103,12 +103,20 @@ Accepted shapes
 
 | Shape | Description |
 | :---: | --- |
-| `square` | Create common square confetti. |
+| `square` | Create confetti in the form of square. |
+| `triangle` | Create confetti in the form of triangle. |
+| `rectangle` | Create confetti in the form of rectangle. |
 | `ellipse` | Create confetti in the form of ellipse. |
 | `circle` | Create confetti in the form of a circle. |
 | `star` | Create confetti in the form of star with five spikes. |
 | `emoji` | Create confetti with emojis. |
 
+## Build
+
+```sh
+npm install
+npm run build
+```
 
 ## Contributors
 All issue reports, feature requests, pull requests and github stars are welcomed and much appreciated.

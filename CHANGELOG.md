@@ -1,5 +1,14 @@
 # Changelog
 
+### 0.3.9
+
+Release 6 jul 2025
+
+  * Added `triangle` shape
+  * Now `rectangle` shape has a more natural movement
+  * Update dev dependencies
+  * Update README.md
+
 ### 0.3.8
 
 Release 3 jul 2025

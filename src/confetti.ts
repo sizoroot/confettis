@@ -8,6 +8,7 @@ import squareShape from './shapes/square'
 import starShape from './shapes/star'
 import circleShape from './shapes/circle'
 import rectangleShape from './shapes/rectangle'
+import triangleShape from './shapes/triangle'
 
 const fettis: any = []
 
@@ -228,6 +229,7 @@ const createConfettiShape = (context: CanvasRenderingContext2D, fetti: ConfettiP
     if(fetti.shape == 'circle')  circleShape(context, fetti)
     if(fetti.shape == 'star') starShape(context, fetti)
     if(fetti.shape == 'emoji') emojiShape(context, fetti)
+    if(fetti.shape == 'triangle') triangleShape(context, fetti)
 
 }
 

@@ -1,6 +1,6 @@
 /*
  *
- *  🎉 Confettis v0.3.8
+ *  🎉 Confettis v0.3.9
  *  https://github.com/sizoroot/confettis
  *
  *  (c) 2025 Lucas O. S.
