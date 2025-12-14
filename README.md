@@ -1,12 +1,12 @@
-![Confettis](https://i.imgur.com/kpJt6R7.png)
+![Confettis](https://i.imgur.com/o9efxRG.png)
 
 [![NPM](https://img.shields.io/npm/v/confettis.svg)](https://www.npmjs.com/package/confettis)
-[![GitHub Issues](https://img.shields.io/github/issues/ovniroto/confettis)](https://github.com/ovniroto/confettis/issues)
-[![GitHub Tag](https://img.shields.io/github/tag/ovniroto/confettis.svg)](https://github.com/ovniroto/confettis/tags)
-[![GitHub Commits](https://img.shields.io/github/commit-activity/t/ovniroto/confettis)](https://github.com/ovniroto/confettis/commits/main/)
-[![GitHub License](https://img.shields.io/github/license/ovniroto/confettis)](https://github.com/ovniroto/confettis/blob/main/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/sizoroot/confettis)](https://github.com/sizoroot/confettis/issues)
+[![GitHub Tag](https://img.shields.io/github/tag/sizoroot/confettis.svg)](https://github.com/sizoroot/confettis/tags)
+[![GitHub Commits](https://img.shields.io/github/commit-activity/t/sizoroot/confettis)](https://github.com/sizoroot/confettis/commits/main/)
+[![GitHub License](https://img.shields.io/github/license/sizoroot/confettis)](https://github.com/sizoroot/confettis/blob/main/LICENSE)
 
-# 🎉 Confettis v0.3.7
+# 🎉 Confettis v0.4.1
 
 Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 
@@ -20,22 +20,21 @@ Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 * 😄 Super easy to use!
 
 ### Demo
-[confettis.ovni.dev](https://confettis.ovni.dev)
+[confettis.sizo.dev](https://confettis.sizo.dev)
 
 ### Resources
-- [Documentation](https://confettis.ovni.dev/docs)
-- [Changelog](https://github.com/ovniroto/confettis/blob/main/CHANGELOG.md)
+- [Changelog](https://github.com/sizoroot/confettis/blob/main/CHANGELOG.md)
 
 ## Installation
 
 Browser:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/confettis@0.3.7/lib/confettis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/confettis@0.4.1/lib/confettis.min.js"></script>
 ```
 
 Deno:
 ```js
-import * as confetti from 'https://esm.sh/confettis@0.3.7'
+import * as confetti from 'https://esm.sh/confettis@0.4.1'
 ```
 
 Node:
@@ -68,7 +67,7 @@ confetti.create({
 })
 ```
 
-This is just an example, but you can do anything. I recommend you look at the examples I have put on the web! See more examples [here](https://confettis.ovni.dev)!
+This is just an example, but you can do anything. I recommend you look at the examples I have put on the web! See more examples [here](https://confettis.sizo.dev)!
 
 ## Parameters
 
@@ -104,12 +103,28 @@ Accepted shapes
 
 | Shape | Description |
 | :---: | --- |
-| `square` | Create common square confetti. |
+| `square` | Create confetti in the form of square. |
+| `triangle` | Create confetti in the form of triangle. |
+| `rectangle` | Create confetti in the form of rectangle. |
 | `ellipse` | Create confetti in the form of ellipse. |
 | `circle` | Create confetti in the form of a circle. |
 | `star` | Create confetti in the form of star with five spikes. |
 | `emoji` | Create confetti with emojis. |
 
+### Stop confetti
+
+Stops all animations and clear all confettis.
+
+```js
+confetti.stop()
+```
+
+## Build
+
+```sh
+npm install
+npm run build
+```
 
 ## Contributors
 All issue reports, feature requests, pull requests and github stars are welcomed and much appreciated.

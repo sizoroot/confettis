@@ -1,1 +1,1 @@
-export { createConfetti as create, reset } from './confetti'
+export { createConfetti as create, stop } from './confetti'

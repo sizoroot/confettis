@@ -8,6 +8,7 @@ import squareShape from './shapes/square'
 import starShape from './shapes/star'
 import circleShape from './shapes/circle'
 import rectangleShape from './shapes/rectangle'
+import triangleShape from './shapes/triangle'
 
 const fettis: any = []
 
@@ -228,6 +229,7 @@ const createConfettiShape = (context: CanvasRenderingContext2D, fetti: ConfettiP
     if(fetti.shape == 'circle')  circleShape(context, fetti)
     if(fetti.shape == 'star') starShape(context, fetti)
     if(fetti.shape == 'emoji') emojiShape(context, fetti)
+    if(fetti.shape == 'triangle') triangleShape(context, fetti)
 
 }
 
@@ -268,19 +270,29 @@ const renderConfetti = (): void => {
 }
 
 /**
- * Reset confetti
+ * Stop confettis
  *
  * @return {void}
  */
-const reset = (): void => {
-    if(confettiInitialized && animationFrame) {
-        window.cancelAnimationFrame(animationFrame)
-        confettiInitialized = false
-        animationFrame = null
+const stop = (): void => {
+
+    if(animationFrame) window.cancelAnimationFrame(animationFrame)
+
+    fettis.length = 0
+
+    const canvas = getCanvas(fettiGlobals.canvas as unknown as string)
+
+    if(canvas) {
+        const context: any = canvas.getContext("2d")
+        context.clearRect(0, 0, canvas.width, canvas.height)
     }
+
+    confettiInitialized = false
+    animationFrame = null
+
 }
 
 export {
     createConfetti,
-    reset
+    stop
 }
