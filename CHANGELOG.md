@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.4.1
+
+  * Renamed `reset` function to `stop`
+  * Fixed `stop` function, now stops animations and clear confettis
+
 ### 0.3.9
 
 Release 6 jul 2025

@@ -1,6 +1,6 @@
 /*
  *
- *  🎉 Confettis v0.3.9
+ *  🎉 Confettis v0.4.1
  *  https://github.com/sizoroot/confettis
  *
  *  (c) 2025 Lucas O. S.
@@ -41,10 +41,10 @@ type ConfettiProps = {
  */
 declare const createConfetti: (props?: ConfettiProps) => void;
 /**
- * Reset confetti
+ * Stop confettis
  *
  * @return {void}
  */
-declare const reset: () => void;
+declare const stop: () => void;
 
-export { createConfetti as create, reset };
+export { createConfetti as create, stop };

@@ -270,19 +270,29 @@ const renderConfetti = (): void => {
 }
 
 /**
- * Reset confetti
+ * Stop confettis
  *
  * @return {void}
  */
-const reset = (): void => {
-    if(confettiInitialized && animationFrame) {
-        window.cancelAnimationFrame(animationFrame)
-        confettiInitialized = false
-        animationFrame = null
+const stop = (): void => {
+
+    if(animationFrame) window.cancelAnimationFrame(animationFrame)
+
+    fettis.length = 0
+
+    const canvas = getCanvas(fettiGlobals.canvas as unknown as string)
+
+    if(canvas) {
+        const context: any = canvas.getContext("2d")
+        context.clearRect(0, 0, canvas.width, canvas.height)
     }
+
+    confettiInitialized = false
+    animationFrame = null
+
 }
 
 export {
     createConfetti,
-    reset
+    stop
 }
