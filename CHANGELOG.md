@@ -1,5 +1,7 @@
 # Changelog
 
+Release 14 dec 2025
+
 ### 0.4.1
 
   * Renamed `reset` function to `stop`
