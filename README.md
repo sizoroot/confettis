@@ -6,7 +6,7 @@
 [![GitHub Commits](https://img.shields.io/github/commit-activity/t/sizoroot/confettis)](https://github.com/sizoroot/confettis/commits/main/)
 [![GitHub License](https://img.shields.io/github/license/sizoroot/confettis)](https://github.com/sizoroot/confettis/blob/main/LICENSE)
 
-# 🎉 Confettis v0.5.0
+# 🎉 Confettis v0.5.1
 
 Confettis is a tiny, dependency-free library to add confetti to your website. Yep, confettis! 🎉
 
@@ -36,7 +36,7 @@ Confettis is a tiny, dependency-free library to add confetti to your website. Ye
 
 Browser:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/confettis@0.5.0/lib/confettis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/confettis@0.5.1/lib/confettis.min.js"></script>
 <script>
     confetti.create()
 </script>
