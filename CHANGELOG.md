@@ -2,7 +2,7 @@
 
 Release 3 nov 2026
 
-### 0.5.0
+### 0.5.1
 
   * Added tests and a test page
   * Update dev dependencies
@@ -29,6 +29,8 @@ Release 3 nov 2026
   * `stop` accepts an optional canvas id to stop only that canvas
   * Fixed `require('confettis')`, added `exports` (the CJS bundle is now `lib/confettis.cjs`) and `sideEffects: false` to `package.json`
   * Renamed internal `wabble` to `wobble`
+
+Note: 0.5.0 was skipped (version bump by mistake)
 
 ### 0.4.1
 
