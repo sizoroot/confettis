@@ -15,25 +15,26 @@ const starShape = (context: CanvasRenderingContext2D, fetti: ConfettiProperties)
     const outerRadius = 8 * fetti.scale
     const step = Math.PI / spikes
 
+    const flip = fetti.scale > 0 ? Math.abs(fetti.wabble.y - fetti.position.y) / (10 * fetti.scale) : 1
+
     context.beginPath()
+    context.save()
+    context.translate(fetti.position.x, fetti.position.y)
+    context.rotate(Math.PI / 10 * fetti.wabble.w)
+    context.scale(1, 0.25 + 0.75 * flip)
 
     while (spikes--) {
 
-        const x1 = fetti.position.x + (Math.cos(rotation) * outerRadius)
-        const y1 = fetti.position.y + (Math.sin(rotation) * outerRadius)
-
-        context.lineTo(x1, y1)
+        context.lineTo(Math.cos(rotation) * outerRadius, Math.sin(rotation) * outerRadius)
         rotation += step
 
-        const x2 = fetti.position.x + (Math.cos(rotation) * innerRadius)
-        const y2 = fetti.position.y + (Math.sin(rotation) * innerRadius)
-
-        context.lineTo(x2, y2)
+        context.lineTo(Math.cos(rotation) * innerRadius, Math.sin(rotation) * innerRadius)
         rotation += step
 
     }
 
     context.closePath()
+    context.restore()
     context.fill()
 }
 
