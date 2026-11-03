@@ -7,6 +7,11 @@ Release 3 nov 2026
   * Added tests and a test page
   * Update dev dependencies
   * Removed Deno instalation on README.md (obsolete runtime)
+  * Added CI workflow (typecheck, tests and build) and `typecheck` script
+  * Added movement to the `emoji` shape, now it spins and flips like the other shapes (disabled with `quiet`)
+  * Added `svg` shape and `svgs` option, to create confetti with SVG markup or URLs
+  * Added `disableForReducedMotion` option to not create confettis when the user prefers reduced motion
+  * Added support for high density screens, canvas is sharp now
   * Fixed confettis being skipped (or others removed) when several leave the screen or expire in the same frame
   * Fixed `0` and `false` values being ignored (`x`, `y`, `gravity`, `drift`, `angle`, `spread`, `decay`, `quiet` and `overflow`)
   * Fixed `ticks` as a list, now the fade out and the lifetime of each confetti use the same value
@@ -18,20 +23,16 @@ Release 3 nov 2026
   * Improved animation, now the speed does not depend on the screen refresh rate
   * Improved performance, less objects are created for each confetti and the colors and position are calculated once per call
   * Each call now keeps its own `canvas` and `z`, so several canvases can be used at the same time
-  * Added support for high density screens, canvas is sharp now
   * `stop` does nothing on the server (SSR) instead of throwing an error
   * Improved types, removed `any` and a shape map is used instead of conditions
   * `create` now returns a promise resolved when the confettis of that call are gone or stopped
   * `stop` accepts an optional canvas id to stop only that canvas
-  * Added `disableForReducedMotion` option to not create confettis when the user prefers reduced motion
   * Fixed `require('confettis')`, added `exports` (the CJS bundle is now `lib/confettis.cjs`) and `sideEffects: false` to `package.json`
   * Renamed internal `wabble` to `wobble`
-  * Added CI workflow (typecheck, tests and build) and `typecheck` script
-  * Added movement to the `emoji` shape, now it spins and flips like the other shapes (disabled with `quiet`)
-
-Release 14 dec 2025
 
 ### 0.4.1
+
+Release 14 dec 2025
 
   * Renamed `reset` function to `stop`
   * Fixed `stop` function, now stops animations and clear confettis
