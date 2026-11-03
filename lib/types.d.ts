@@ -8,7 +8,7 @@
  *
 */
 
-type Shapes = 'square' | 'rectangle' | 'ellipse' | 'circle' | 'star' | 'emoji' | 'triangle';
+type Shapes = 'square' | 'rectangle' | 'ellipse' | 'circle' | 'star' | 'emoji' | 'triangle' | 'svg';
 type ConfettiProps = {
     /** Horizontal position relative to the canvas, 0 is the left edge and 1 the right edge */
     x?: number;
@@ -36,6 +36,8 @@ type ConfettiProps = {
     shapes?: Shapes[];
     colors?: string[];
     emojis?: string[];
+    /** SVG markup (`<svg ...>`) or URLs used by the `svg` shape */
+    svgs?: string[];
 };
 
 /**
