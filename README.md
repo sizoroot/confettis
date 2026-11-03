@@ -235,16 +235,6 @@ pnpm test
 pnpm run test:watch
 ```
 
-### Test page
-
-To see the confettis in the browser, build the test bundle and open `test/svg.html` (test page for the `svg` shape):
-
-```sh
-pnpm run test:page
-```
-
-The bundle is generated in `dist/` (ignored by git), so `lib/` is not modified.
-
 ## Contributors
 All issue reports, feature requests, pull requests and github stars are welcomed and much appreciated.
 
