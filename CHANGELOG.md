@@ -4,6 +4,7 @@ Release 3 nov 2026
 
 ### 0.5.0
 
+  * Added tests and a test page
   * Update dev dependencies
   * Removed Deno instalation on README.md (obsolete runtime)
   * Fixed confettis being skipped (or others removed) when several leave the screen or expire in the same frame
@@ -26,7 +27,7 @@ Release 3 nov 2026
   * Fixed `require('confettis')`, added `exports` (the CJS bundle is now `lib/confettis.cjs`) and `sideEffects: false` to `package.json`
   * Renamed internal `wabble` to `wobble`
   * Added CI workflow (typecheck, tests and build) and `typecheck` script
-  * Added tests and a test page
+  * Added movement to the `emoji` shape, now it spins and flips like the other shapes (disabled with `quiet`)
 
 Release 14 dec 2025
 
