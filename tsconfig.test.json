@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "moduleResolution": "bundler",
+        "skipLibCheck": true,
+        "rootDir": ".",
+        "declaration": false,
+        "declarationDir": null
+    },
+    "include": [ "./src/**/*.ts", "./test/**/*.test-d.ts" ]
+}

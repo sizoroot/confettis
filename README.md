@@ -6,17 +6,18 @@
 [![GitHub Commits](https://img.shields.io/github/commit-activity/t/sizoroot/confettis)](https://github.com/sizoroot/confettis/commits/main/)
 [![GitHub License](https://img.shields.io/github/license/sizoroot/confettis)](https://github.com/sizoroot/confettis/blob/main/LICENSE)
 
-# 🎉 Confettis v0.4.1
+# 🎉 Confettis v0.4.2
 
-Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
+Confettis is a tiny, dependency-free library to add confetti to your website. Yep, confettis! 🎉
 
-* 😊 SSR Support
-* 🎉 Common confettis
-* 👽 Emoji coffetis
-* ⭐️ Star confettis
-* 🟡 Circle confettis (snow?)
-* ✨ Confettis with different sizes
-* 🗿 Static or moving confettis
+* 😊 SSR support (safe to import on the server, it does nothing there)
+* 🎉 Common shapes: square, rectangle, triangle, ellipse and circle
+* 👽 Emoji confetti
+* ⭐️ Star confetti
+* 🟡 Circle confetti (snow?)
+* ✨ Different sizes, colors, speeds and gravity
+* 🗿 Static or moving confetti
+* 🧩 Written in TypeScript, types included
 * 😄 Super easy to use!
 
 ### Demo
@@ -24,25 +25,30 @@ Confettis is a small lib to add confettis to your website. Yep, confettis! 🎉
 
 ### Resources
 - [Changelog](https://github.com/sizoroot/confettis/blob/main/CHANGELOG.md)
+- [Examples](https://confettis.sizo.dev)
+- [Issues](https://github.com/sizoroot/confettis/issues)
 
 ## Installation
 
 Browser:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/confettis@0.4.1/lib/confettis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/confettis@0.4.2/lib/confettis.min.js"></script>
+<script>
+    confetti.create()
+</script>
 ```
 
-Deno:
-```js
-import * as confetti from 'https://esm.sh/confettis@0.4.1'
-```
-
-Node:
+Node / bundlers:
 ```sh
-$ npm i confettis
+npm install confettis
+```
+```sh
+pnpm install confettis
 ```
 ```js
 import * as confetti from 'confettis'
+// or
+import { create, stop } from 'confettis'
 ```
 
 ## Usage
@@ -67,7 +73,49 @@ confetti.create({
 })
 ```
 
-This is just an example, but you can do anything. I recommend you look at the examples I have put on the web! See more examples [here](https://confettis.sizo.dev)!
+This is just an example, but you can do anything. See more examples [here](https://confettis.sizo.dev)!
+
+### Emoji confetti
+```js
+confetti.create({
+    shapes: [ 'emoji' ],
+    emojis: [ '🎉', '🥳', '🎈' ]
+})
+```
+
+### Confetti on click
+```js
+button.addEventListener('click', (event) => {
+    confetti.create({
+        x: event.clientX / window.innerWidth,
+        y: event.clientY / window.innerHeight,
+        count: 80
+    })
+})
+```
+
+### Stop confetti
+
+Stops all animations and clears all confetti.
+
+```js
+confetti.stop()
+```
+
+### Custom canvas
+
+By default, a full-screen canvas with id `confettis` is created for you. To use your own, pass the id of an existing canvas:
+
+```html
+<canvas id="my-canvas"></canvas>
+```
+```js
+confetti.create({ canvas: 'my-canvas' })
+```
+
+### Server-side rendering
+
+`create` and `stop` do nothing when there is no `window`, so you can call them from SSR frameworks without extra checks. Just make sure they are triggered by something that runs in the browser (an event handler, `useEffect`, `onMounted`, etc.).
 
 ## Parameters
 
@@ -75,16 +123,16 @@ When creating a new confetti you can change the parameters to change the positio
 
 | Option | Type | Default | Description |
 | :---: | :---: | :---: | --- |
-| `canvas` | `string` | confettis | Id of canvas where you are going to show the confetti. If you do not put anything, a canvas will be created with id "confettis". |
+| `canvas` | `string` | `"confettis"` | Id of canvas where you are going to show the confetti. If you do not put anything, a canvas will be created with id "confettis". |
 | `count` | `number` | 100 | Number of confetti to launch. Remember that the more particles the web performance will be worse. The recommended is between 1 and 300 particles per second. |
 | `x` | `number` | 0.5 | The X position is horizontal, being 0 the left edge and 1 the right edge. |
 | `y` | `number` | 0.7 | The Y position is vertical, being 0 the upper edge and 1 the lower edge. |
-| `z` | `number` | MAX_SAFE_INTEGER | The Z position on the page (z-index). Determine whether it is shown above or below other web elements. The higher the number, it will be shown above all (recommended). Default is Number.MAX_SAFE_INTEGER (2147483647) to overcome the height of most popular UI libs. |
-| `gravity` | `number` or `[number]` | 1 | Gravity determine how quickly the confetti will fall. You can play with this parameter to make it fall faster or slower, and you can even make the confetti rise up. |
-| `ticks` | `number` or `[number]` | 300 | Time that confetti will take to disappear (opacity). The higher the number, it will take longer to disappear. Put it in -1 to deactivate it and make it always visible. |
-| `speed` | `number` or `[number]` | 45 | Speed with which the confetti will begin to move. |
-| `scale` | `number` or `[number]` | 0.8 | Scale factor for each confetti particle. Use decimals to make the confetti smaller. Example: [ 0.8, 1, 1.3 ] |
-| `overflow` | `object` |  | Prarameter to allow confetti particle exceed the canvas without being deleted |
+| `z` | `number` | `Number.MAX_SAFE_INTEGER` | The Z position on the page (z-index). Determine whether it is shown above or below other web elements. The higher the number, it will be shown above all (recommended). Default is Number.MAX_SAFE_INTEGER (2147483647) to overcome the height of most popular UI libs. |
+| `gravity` | `number` or `number[]` | 1 | Gravity determine how quickly the confetti will fall. You can play with this parameter to make it fall faster or slower, and you can even make the confetti rise up. |
+| `ticks` | `number` or `number[]` | 300 | Time that confetti will take to disappear (opacity). The higher the number, it will take longer to disappear. Put it in -1 to deactivate it and make it always visible. |
+| `speed` | `number` or `number[]` | 45 | Speed with which the confetti will begin to move. |
+| `scale` | `number` or `number[]` | 0.8 | Scale factor for each confetti particle. Use decimals to make the confetti smaller. Example: [ 0.8, 1, 1.3 ] |
+| `overflow` | `object` | | Allows confetti particles to exceed the canvas edges without being removed |
 | `overflow`.`left` | `boolean` | false | When set to `true` allows the left overflow |
 | `overflow`.`right` | `boolean` | false | When set to `true` allows the right overflow |
 | `overflow`.`top` | `boolean` | true | When set to `true` allows the top overflow |
@@ -93,13 +141,13 @@ When creating a new confetti you can change the parameters to change the positio
 | `drift` | `number` | 0 | Determine the side where the confetti will go. 0 indicates that it will fall down. A negative number indicates that it will go to the left, and a positive number indicates that it will go to the right. |
 | `angle` | `number` | 90 | The angle at which the confetti is going to be released. In degrees (0-360) |
 | `spread` | `number` | 70 | How far the confetti can come. In degrees (0-360) |
-| `quiet` | `boolean` | false | It allows to create static confetti. Perfect if you want `square` or ` ellipse` confetti without moving when falling. |
-| `colors` | `[string]` |  | Array with strings of the colors you want to show the confetti. The colors must be in Hex format (#ffffff). |
-| `shapes` | `[string]` |  | An array of shapes for the confetti. |
-| `emojis` | `[string]` |  | An array of emojis for the confetti. |
+| `quiet` | `boolean` | false | It allows to create static confetti. Perfect if you want `square` or `ellipse` confetti without moving when falling. |
+| `colors` | `string[]` | 8 bright colors | Array with strings of the colors you want to show the confetti. The colors must be in Hex format (#ffffff). |
+| `shapes` | `string[]` | `[ 'square', 'ellipse' ]` | An array of shapes for the confetti. See the accepted shapes below. |
+| `emojis` | `string[]` | `[ '🛸', '👽', '✨' ]` | An array of emojis used by the `emoji` shape. |
 
 
-Accepted shapes
+### Accepted shapes
 
 | Shape | Description |
 | :---: | --- |
@@ -111,20 +159,18 @@ Accepted shapes
 | `star` | Create confetti in the form of star with five spikes. |
 | `emoji` | Create confetti with emojis. |
 
-### Stop confetti
+> When a parameter accepts `number[]`, one random value from the array is picked for each particle.
 
-Stops all animations and clear all confettis.
+## Development
 
-```js
-confetti.stop()
-```
-
-## Build
+This project uses [pnpm](https://pnpm.io).
 
 ```sh
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
+
+The build generates the CJS, ESM, UMD and minified bundles and the type definitions in `lib/`.
 
 ## Contributors
 All issue reports, feature requests, pull requests and github stars are welcomed and much appreciated.

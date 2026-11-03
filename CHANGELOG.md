@@ -1,5 +1,27 @@
 # Changelog
 
+Release 3 nov 2026
+
+### 0.4.2
+
+  * Update dev dependencies
+  * Removed Deno instalation on README.md (obsolete runtime)
+  * Fixed confettis being skipped (or others removed) when several leave the screen or expire in the same frame
+  * Fixed `0` and `false` values being ignored (`x`, `y`, `gravity`, `drift`, `angle`, `spread`, `decay`, `quiet` and `overflow`)
+  * Fixed `ticks` as a list, now the fade out and the lifetime of each confetti use the same value
+  * Fixed types, added `triangle` to the shapes type and `shapes` now only accepts valid shapes
+  * Fixed `resize` listener being added again each time confettis were created after `stop`
+  * Fixed `setCanvasZIndex` throwing an error when the canvas does not exist
+  * Added documentation of the relative `x` and `y` positions to the types
+  * Improved performance, the animation loop now stops when there are no confettis and starts again when they are created
+  * Improved animation, now the speed does not depend on the screen refresh rate
+  * Improved performance, less objects are created for each confetti and the colors and position are calculated once per call
+  * Each call now keeps its own `canvas` and `z`, so several canvases can be used at the same time
+  * Added support for high density screens, canvas is sharp now
+  * `stop` does nothing on the server (SSR) instead of throwing an error
+  * Improved types, removed `any` and a shape map is used instead of conditions
+  * Added tests and a test page
+
 Release 14 dec 2025
 
 ### 0.4.1

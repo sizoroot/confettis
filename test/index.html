@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Confettis test page</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: system-ui, sans-serif;
+            background: #14141f;
+            color: #f0f0f5;
+        }
+
+        h1 { margin-top: 0 }
+        h2 { margin: 24px 0 8px; font-size: 16px; color: #b980ff }
+        p { margin: 0 0 8px; font-size: 13px; color: #9a9ab0 }
+
+        .group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        button {
+            padding: 8px 14px;
+            border: 0;
+            border-radius: 6px;
+            background: #29c6ff;
+            color: #14141f;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover { background: #33ffdd }
+        button.stop { background: #ff6685 }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>🎉 Confettis test page</h1>
+    <p>Build it first with <code>pnpm run test:page</code> and open this file in the browser.</p>
+
+    <h2>Basic</h2>
+    <div class="group">
+        <button onclick="confetti.create()">Default</button>
+        <button onclick="confetti.create({ count: 300 })">300 confettis</button>
+        <button onclick="confetti.create({ shapes: ['square', 'rectangle', 'ellipse', 'circle', 'star', 'triangle'] })">All shapes</button>
+        <button onclick="confetti.create({ shapes: ['emoji'], emojis: ['🎉', '🥳', '✨'] })">Emojis</button>
+        <button onclick="confetti.create({ quiet: true })">Quiet</button>
+        <button onclick="confetti.create({ canvas: 'custom', z: 10 })">Custom canvas + z-index</button>
+        <button class="stop" onclick="confetti.stop()">Stop</button>
+    </div>
+
+    <h2>Bug 1 — removing confettis (some seem to stay or blink)</h2>
+    <p>Many confettis leave the screen or expire at the same time, and none should get stuck.</p>
+    <div class="group">
+        <button onclick="confetti.create({ count: 500, ticks: 80, overflow: { top: false } })">500 short lived</button>
+        <button onclick="confetti.create({ count: 500, x: 0.5, y: 0.5, speed: 70, spread: 360 })">Explosion</button>
+    </div>
+
+    <h2>Bug 2 — falsy values (0 / false) are ignored</h2>
+    <p>Each button should behave exactly as the label says.</p>
+    <div class="group">
+        <button onclick="confetti.create({ x: 0, y: 0.5, angle: 0 })">x: 0 (left edge), angle: 0</button>
+        <button onclick="confetti.create({ x: 0.5, y: 0, angle: 270 })">y: 0 (top edge), angle: 270</button>
+        <button onclick="confetti.create({ gravity: 0, drift: 0 })">gravity: 0</button>
+        <button onclick="confetti.create({ overflow: { top: false } })">overflow.top: false</button>
+        <button onclick="confetti.create({ quiet: false })">quiet: false</button>
+    </div>
+
+    <h2>Bug 3 — ticks as array</h2>
+    <p>Each confetti should fade out using its own lifetime (short and long ones mixed).</p>
+    <div class="group">
+        <button onclick="confetti.create({ ticks: [ 60, 150, 300 ], count: 150 })">ticks: [60, 150, 300]</button>
+    </div>
+
+    <h2>Bug 4 — triangle shape</h2>
+    <div class="group">
+        <button onclick="confetti.create({ shapes: ['triangle'] })">Triangles</button>
+    </div>
+
+    <h2>Bug 8 — resize listener</h2>
+    <p>Press "Create" and "Stop" several times, then resize the window while confettis are falling. The canvas should follow the window size.</p>
+    <div class="group">
+        <button onclick="confetti.create({ ticks: 600 })">Create</button>
+        <button class="stop" onclick="confetti.stop()">Stop</button>
+    </div>
+
+    <h2>Performance — idle loop</h2>
+    <p>Press "Short" and wait. Once the confettis disappear the canvas must be clear and no more animation frames should run (check the Performance tab). Pressing it again must work.</p>
+    <div class="group">
+        <button onclick="confetti.create({ ticks: 60 })">Short</button>
+    </div>
+
+    <h2>Performance — delta time</h2>
+    <p>The speed and the duration must be the same on any refresh rate (60 / 120 / 144 Hz). Throttle the CPU in the DevTools to see it: the confettis should keep the same pace instead of slowing down. Also switch tabs while they fall: they must not jump when you return.</p>
+    <div class="group">
+        <button onclick="confetti.create({ count: 200 })">200 confettis</button>
+    </div>
+
+    <h2>Several canvases</h2>
+    <p>Each call keeps its own canvas and z-index. The confettis of the second button are drawn in another canvas and finish on their own.</p>
+    <div class="group">
+        <button onclick="confetti.create({ canvas: 'one', z: 10, colors: ['#ff6685'], ticks: 400 })">Canvas one (red, long)</button>
+        <button onclick="confetti.create({ canvas: 'two', z: 20, colors: ['#33ffdd'], ticks: 100, x: 0.2 })">Canvas two (green, short)</button>
+    </div>
+
+    <h2>High density screens</h2>
+    <p>On a retina / zoomed screen (or with the browser zoom at 200%) the confettis must look sharp, not blurry.</p>
+    <div class="group">
+        <button onclick="confetti.create({ shapes: ['star', 'circle', 'triangle'], count: 150 })">Sharp shapes</button>
+    </div>
+
+    <script src="../dist/confettis.umd.js"></script>
+
+</body>
+</html>

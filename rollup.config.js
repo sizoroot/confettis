@@ -63,6 +63,23 @@ const createFiles = () => {
     	config.plugins.push(terser({}));
     }
 
+    if(process.env.NODE_ENV === 'dev') {
+    	config.output = {
+    		file: `dist/${bundleName}.umd.js`,
+    		format: 'umd',
+    		name: 'confetti',
+    		sourcemap: true
+    	}
+    	config.plugins = [
+    		typescript({
+    			tsconfig: './tsconfig.json',
+    			outDir: 'dist',
+    			declaration: false,
+    			declarationDir: undefined
+    		})
+    	]
+    }
+
     if(process.env.NODE_ENV === 'types') {
     	config.input = `./${distDir}/index.d.ts`,
     	config.output = {

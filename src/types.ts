@@ -1,4 +1,4 @@
-type Shapes = 'square' | 'rectangle' | 'ellipse' | 'circle' | 'star' | 'emoji'
+type Shapes = 'square' | 'rectangle' | 'ellipse' | 'circle' | 'star' | 'emoji' | 'triangle'
 
 export type ConfettiGlobals = {
 
@@ -35,7 +35,9 @@ export type ConfettiGlobals = {
 
 export type ConfettiProps = {
 
+    /** Horizontal position relative to the canvas, 0 is the left edge and 1 the right edge */
     x?: number
+    /** Vertical position relative to the canvas, 0 is the upper edge and 1 the lower edge */
     y?: number
     z?: number
 
@@ -60,7 +62,7 @@ export type ConfettiProps = {
     spread?: number
     quiet?: boolean
 
-    shapes?: string[]
+    shapes?: Shapes[]
     colors?: string[]
     emojis?: string[]
 
@@ -68,10 +70,13 @@ export type ConfettiProps = {
 
 export type ConfettiProperties = {
 
+    canvas: string
+
     random: number
     angle2d: number
     opacity: boolean
     progress: number
+    lifetime: number
 
     wabble: {
         w: number
@@ -113,8 +118,6 @@ export type ConfettiProperties = {
         x: number
         y: number
     }
-
-    update: () => void
 
 }
 

@@ -36,74 +36,50 @@ export const isNumber = (param: any) => {
 }
 
 /**
+ * Returns the number or a random item when it is a list of numbers.
+ */
+const randomItem = (value: number | number[]): number => {
+    if (Array.isArray(value)) return value[Math.floor(randomNumber(0, value.length))]
+    return value
+}
+
+/**
+ * Converts the relative position (0 to 1) of the props to the canvas position in pixels.
+ */
+export const convertPosition = (props: any, globals: ConfettiGlobals): { x: number, y: number } => {
+    return getCanvasPos({ id: props?.canvas, x: props?.x ?? globals.x, y: props?.y ?? globals.y })
+}
+
+/**
  * Checks if there is a prop and if there isn't then returns a default value.
  */
 export const convertProps = (props: any, globals: ConfettiGlobals): any => {
 
-    let x, y, colors, shapes, emojis, angle, spread, gravity, speed, ticks, drift, decay, scale, quiet, overflow
+    let colors, shapes, emojis, angle, spread, gravity, speed, ticks, drift, decay, scale, quiet, overflow
 
-    if(props) {
+    colors = props?.colors ?? globals.colors
+    shapes = props?.shapes ?? globals.shapes
+    emojis = props?.emojis ?? globals.emojis
 
-        if (props.canvas) {
-
-            if (props.x) {
-                x = getCanvasPos({ id: props.canvas, x: props.x }).x
-            } else {
-                x = getCanvasPos({ id: props.canvas, x: globals.x }).x
-            }
-
-            if (props.y) {
-                y = getCanvasPos({ id: props.canvas, y: props.y }).y
-            } else {
-                y = getCanvasPos({ id: props.canvas, y: globals.y }).y
-            }
-
-        } else {
-
-            if(props.x) {
-                x = getCanvasPos({ x: props.x }).x
-            } else {
-                x = getCanvasPos({ x: globals.x }).x
-            }
-
-            if(props.y) {
-                y = getCanvasPos({ y: props.y }).y
-            } else {
-                y = getCanvasPos({ y: globals.y }).y
-            }
-
-        }
-
-    }
-
-    colors = props ? props.colors ? props.colors : globals.colors : globals.colors
-    shapes = props ? props.shapes ? props.shapes : globals.shapes : globals.shapes
-    emojis = props ? props.emojis ? props.emojis : globals.emojis : globals.emojis
-
-    gravity = props ? props.gravity ? isNumber(props.gravity) ? props.gravity : props.gravity[Math.floor(randomNumber(0, props.gravity.length))] : globals.gravity : globals.gravity
-
-    scale = props ? props.scale ? isNumber(props.scale) ? props.scale : props.scale[Math.floor(randomNumber(0, props.scale.length))] : globals.scale : globals.scale
-
-    speed = props ? props.speed ? isNumber(props.speed) ? props.speed : props.speed[Math.floor(randomNumber(0, props.speed.length))] : globals.speed : globals.speed
+    gravity = randomItem(props?.gravity ?? globals.gravity)
+    scale = randomItem(props?.scale ?? globals.scale)
+    speed = randomItem(props?.speed ?? globals.speed)
 
     overflow = {
-        left: props ? props.overflow ? props.overflow.left ? props.overflow.left : globals.overflow.left : globals.overflow.left : globals.overflow.left,
-        right: props ? props.overflow ? props.overflow.right ? props.overflow.right : globals.overflow.right : globals.overflow.right : globals.overflow.right,
-        top: props ? props.overflow ? props.overflow.top ? props.overflow.top : globals.overflow.top : globals.overflow.top : globals.overflow.top,
-        bottom: props ? props.overflow ? props.overflow.bottom ? props.overflow.bottom : globals.overflow.bottom : globals.overflow.bottom : globals.overflow.bottom
+        left: props?.overflow?.left ?? globals.overflow.left,
+        right: props?.overflow?.right ?? globals.overflow.right,
+        top: props?.overflow?.top ?? globals.overflow.top,
+        bottom: props?.overflow?.bottom ?? globals.overflow.bottom
     }
 
-    spread = props ? props.spread ? props.spread : globals.spread : globals.spread
-    angle = props ? props.angle ? props.angle : globals.angle : globals.angle
-    ticks = props ? props.ticks ? props.ticks : globals.ticks : globals.ticks
-    drift = props ? props.drift ? props.drift : globals.drift : globals.drift
-    decay = props ? props.decay ? props.decay : globals.decay : globals.decay
-    quiet = props ? props.quiet ? props.quiet : globals.quiet : globals.quiet
+    spread = props?.spread ?? globals.spread
+    angle = props?.angle ?? globals.angle
+    ticks = randomItem(props?.ticks ?? globals.ticks)
+    drift = props?.drift ?? globals.drift
+    decay = props?.decay ?? globals.decay
+    quiet = props?.quiet ?? globals.quiet
 
     return {
-
-        x,
-        y,
 
         colors,
         shapes,

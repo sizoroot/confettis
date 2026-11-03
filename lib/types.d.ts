@@ -1,9 +1,9 @@
 /*
  *
- *  🎉 Confettis v0.4.1
+ *  🎉 Confettis v0.4.2
  *  https://github.com/sizoroot/confettis
  *
- *  (c) 2025 Lucas O. S.
+ *  (c) 2026 Lucas O. S.
  *  Confettis may be freely distributed under the MIT license.
  *
 */
