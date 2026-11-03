@@ -27,7 +27,8 @@ const globals: ConfettiGlobals = {
 
     shapes: [ 'square' ],
     colors: [ '#ffffff' ],
-    emojis: [ '✨' ]
+    emojis: [ '✨' ],
+    svgs: []
 
 }
 

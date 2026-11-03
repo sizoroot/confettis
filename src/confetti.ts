@@ -2,6 +2,7 @@ import { getCanvas, getCanvasSize, getCanvasContext, clearCanvas, setCanvasZInde
 import { randomNumber, convertHexToRGB, isSSR, convertPosition, convertProps } from './utils'
 import { ConfettiProperties, ConfettiBatch, ConfettiGlobals, ConfettiProps, RGB } from './types'
 
+import svgShape, { loadSvgs } from './shapes/svg'
 import emojiShape from './shapes/emoji'
 import ellipseShape from './shapes/ellipse'
 import squareShape from './shapes/square'
@@ -42,7 +43,8 @@ let confettiGlobals: ConfettiGlobals = {
     disableForReducedMotion: false,
     shapes: [ 'square', 'ellipse' ],
     colors: [ '#33ffdd', '#29c6ff', '#b980ff', '#ff66ff', '#ff6685', '#ffb54d', '#fcff66', '#91ff66' ],
-    emojis: [ '🛸', '👽', '✨' ]
+    emojis: [ '🛸', '👽', '✨' ],
+    svgs: []
 
 }
 
@@ -62,7 +64,8 @@ const shapeRenderers: { [shape: string]: (context: CanvasRenderingContext2D, fet
     circle: circleShape,
     star: starShape,
     emoji: emojiShape,
-    triangle: triangleShape
+    triangle: triangleShape,
+    svg: svgShape
 }
 
 /**
@@ -104,23 +107,32 @@ const createConfetti = (props?: ConfettiProps): Promise<void> => {
 
     return new Promise<void>((resolve) => {
 
-        const batch: ConfettiBatch = { remaining: options.count, resolve: resolve }
+        const spawn = (svgs: HTMLImageElement[]) => {
 
-        if(!canvases.has(options.canvas)) setCanvasWindowSize(options.canvas)
-        canvases.add(options.canvas)
+            const batch: ConfettiBatch = { remaining: options.count, resolve: resolve }
 
-        if(options.z < Number.MAX_SAFE_INTEGER) setCanvasZIndex(options.canvas, options.z)
+            if(!canvases.has(options.canvas)) setCanvasWindowSize(options.canvas)
+            canvases.add(options.canvas)
 
-        const position = convertPosition(options, confettiGlobals)
-        const colors = convertProps(options, confettiGlobals).colors.map((color: string) => convertHexToRGB(color) as unknown as RGB)
+            if(options.z < Number.MAX_SAFE_INTEGER) setCanvasZIndex(options.canvas, options.z)
 
-        for (let i = 0; i < options.count; i++) {
-            fettis.push(confettiProperties(options, batch, position, colors))
+            const position = convertPosition(options, confettiGlobals)
+            const colors = convertProps(options, confettiGlobals).colors.map((color: string) => convertHexToRGB(color) as unknown as RGB)
+
+            for (let i = 0; i < options.count; i++) {
+                fettis.push(confettiProperties(options, batch, position, colors, svgs))
+            }
+
+            if(batch.remaining <= 0) resolve()
+
+            initConfetti()
+
         }
 
-        if(batch.remaining <= 0) resolve()
+        const sources = convertProps(options, confettiGlobals).svgs as string[]
 
-        initConfetti()
+        if(options.shapes.includes('svg') && sources.length > 0) loadSvgs(sources).then(spawn)
+        else spawn([])
 
     })
 
@@ -134,9 +146,10 @@ const createConfetti = (props?: ConfettiProps): Promise<void> => {
  * @param {ConfettiBatch} batch - Batch of the burst the piece belongs to
  * @param {{ x: number, y: number }} position - Launch position in CSS pixels
  * @param {RGB[]} colors - Available colors, one of them is picked randomly
+ * @param {HTMLImageElement[]} svgs - Loaded SVG images, one of them is picked randomly for the `svg` shape
  * @returns {ConfettiProperties} The initial properties of the confetti piece
  */
-const confettiProperties = (options: ConfettiGlobals, batch: ConfettiBatch, position: { x: number, y: number }, colors: RGB[]): ConfettiProperties => {
+const confettiProperties = (options: ConfettiGlobals, batch: ConfettiBatch, position: { x: number, y: number }, colors: RGB[], svgs: HTMLImageElement[]): ConfettiProperties => {
 
     const props = convertProps(options, confettiGlobals)
 
@@ -172,6 +185,7 @@ const confettiProperties = (options: ConfettiGlobals, batch: ConfettiBatch, posi
 
         shape: props.shapes[Math.floor(randomNumber(0, props.shapes.length))],
         emoji: props.emojis[Math.floor(randomNumber(0, props.emojis.length))],
+        svg: svgs[Math.floor(randomNumber(0, svgs.length))],
 
         tick: 0,
         gravity: props.gravity * 3,

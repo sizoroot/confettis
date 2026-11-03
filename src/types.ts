@@ -1,4 +1,4 @@
-type Shapes = 'square' | 'rectangle' | 'ellipse' | 'circle' | 'star' | 'emoji' | 'triangle'
+type Shapes = 'square' | 'rectangle' | 'ellipse' | 'circle' | 'star' | 'emoji' | 'triangle' | 'svg'
 
 export type ConfettiGlobals = {
 
@@ -31,6 +31,7 @@ export type ConfettiGlobals = {
     shapes: Shapes[]
     colors: string[]
     emojis: string[]
+    svgs: string[]
 
 }
 
@@ -66,6 +67,8 @@ export type ConfettiProps = {
     shapes?: Shapes[]
     colors?: string[]
     emojis?: string[]
+    /** SVG markup (`<svg ...>`) or URLs used by the `svg` shape */
+    svgs?: string[]
 
 }
 
@@ -99,6 +102,7 @@ export type ConfettiProperties = {
 
     shape: string
     emoji: string
+    svg?: HTMLImageElement
 
     tick: number
     gravity: number

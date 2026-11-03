@@ -13,6 +13,7 @@ Confettis is a tiny, dependency-free library to add confetti to your website. Ye
 * 😊 SSR support (safe to import on the server, it does nothing there)
 * 🎉 Common shapes: square, rectangle, triangle, ellipse and circle
 * 👽 Emoji confetti
+* 🖼️ SVG confetti
 * ⭐️ Star confetti
 * 🟡 Circle confetti (snow?)
 * ✨ Different sizes, colors, speeds and gravity
@@ -83,6 +84,17 @@ This is just an example, but you can do anything. See more examples [here](https
 confetti.create({
     shapes: [ 'emoji' ],
     emojis: [ '🎉', '🥳', '🎈' ]
+})
+```
+
+### SVG confetti
+```js
+confetti.create({
+    shapes: [ 'svg' ],
+    svgs: [
+        '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#ff6685"/></svg>', // markup
+        '/images/logo.svg' // or a URL
+    ]
 })
 ```
 
@@ -183,6 +195,7 @@ When creating a new confetti you can change the parameters to change the positio
 | `colors` | `string[]` | 8 bright colors | Array with strings of the colors you want to show the confetti. The colors must be in Hex format (#ffffff). |
 | `shapes` | `Shapes[]` | `[ 'square', 'ellipse' ]` | An array of shapes for the confetti. Only the accepted shapes below are valid, TypeScript will warn you about the others. |
 | `emojis` | `string[]` | `[ '🛸', '👽', '✨' ]` | An array of emojis used by the `emoji` shape. |
+| `svgs` | `string[]` | `[]` | An array of SVGs used by the `svg` shape. Each item can be SVG markup (`<svg ...>`) or a URL / data URI. The SVGs are loaded before the confetti is created, and the ones that fail to load are ignored. They keep their own colors and should have a `viewBox` or a `width` and `height`. |
 
 
 ### Accepted shapes
@@ -196,6 +209,7 @@ When creating a new confetti you can change the parameters to change the positio
 | `circle` | Create confetti in the form of a circle. |
 | `star` | Create confetti in the form of star with five spikes. |
 | `emoji` | Create confetti with emojis. |
+| `svg` | Create confetti with your own SVGs (see `svgs`). |
 
 > When a parameter accepts `number[]`, one random value from the array is picked for each particle.
 
@@ -223,7 +237,7 @@ pnpm run test:watch
 
 ### Test page
 
-To see the confettis in the browser, build the test bundle and open `test/index.html`:
+To see the confettis in the browser, build the test bundle and open `test/svg.html` (test page for the `svg` shape):
 
 ```sh
 pnpm run test:page

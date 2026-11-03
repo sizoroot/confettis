@@ -4,7 +4,7 @@ import { ConfettiProps } from '../src/types'
 describe('shapes', () => {
 
     it('accepts all the shapes', () => {
-        expectTypeOf<{ shapes: [ 'square', 'rectangle', 'ellipse', 'circle', 'star', 'emoji', 'triangle' ] }>().toExtend<ConfettiProps>()
+        expectTypeOf<{ shapes: [ 'square', 'rectangle', 'ellipse', 'circle', 'star', 'emoji', 'triangle', 'svg' ] }>().toExtend<ConfettiProps>()
     })
 
     it('does not accept unknown shapes', () => {

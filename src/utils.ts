@@ -81,11 +81,12 @@ export const convertPosition = (props: any, globals: ConfettiGlobals): { x: numb
  */
 export const convertProps = (props: any, globals: ConfettiGlobals): any => {
 
-    let colors, shapes, emojis, angle, spread, gravity, speed, ticks, drift, decay, scale, quiet, overflow
+    let colors, shapes, emojis, svgs, angle, spread, gravity, speed, ticks, drift, decay, scale, quiet, overflow
 
     colors = props?.colors ?? globals.colors
     shapes = props?.shapes ?? globals.shapes
     emojis = props?.emojis ?? globals.emojis
+    svgs = props?.svgs ?? globals.svgs
 
     gravity = randomItem(props?.gravity ?? globals.gravity)
     scale = randomItem(props?.scale ?? globals.scale)
@@ -110,6 +111,7 @@ export const convertProps = (props: any, globals: ConfettiGlobals): any => {
         colors,
         shapes,
         emojis,
+        svgs,
 
         gravity,
         scale,
