@@ -46,14 +46,12 @@ let confettiGlobals: ConfettiGlobals = {
 
 }
 
-// Canvases with confettis, each one is cleared when it has no more confettis
 const canvases = new Set<string>()
 
 let confettiInitialized: boolean = false
 let animationFrame: number | null = null
 let lastFrameTime: number | null = null
 
-// Physics are tuned for 60 frames per second, `step` is how many of those frames passed
 const FRAME_TIME = 1000 / 60
 const MAX_STEP = 3
 
@@ -88,13 +86,11 @@ const createConfetti = (props?: ConfettiProps): void => {
 
     const options = { ...confettiGlobals, ...props } as ConfettiGlobals
 
-    // The resize listener is removed on stop, so the canvas can be outdated
     if(!canvases.has(options.canvas)) setCanvasWindowSize(options.canvas)
     canvases.add(options.canvas)
 
     if(options.z < Number.MAX_SAFE_INTEGER) setCanvasZIndex(options.canvas, options.z)
 
-    // Same for all the confettis of this call
     const position = convertPosition(options, confettiGlobals)
     const colors = convertProps(options, confettiGlobals).colors.map((color: string) => convertHexToRGB(color) as unknown as RGB)
 
@@ -244,7 +240,6 @@ const renderConfetti = (time: number): void => {
     const sizes = new Map<string, { width: number, height: number }>()
     canvases.forEach((id) => sizes.set(id, getCanvasSize(getCanvas(id))))
 
-    // Reverse loop with a single removal per confetti, so no index is skipped
     for (let index = fettis.length - 1; index >= 0; index--) {
 
         const fetti = fettis[index]
@@ -260,13 +255,11 @@ const renderConfetti = (time: number): void => {
 
     }
 
-    // Nothing left to animate, so stop the loop until new confettis are created
     if(fettis.length === 0) {
         stop()
         return
     }
 
-    // Canvases without confettis are cleared once and released
     const used = new Set(fettis.map((fetti) => fetti.canvas))
     canvases.forEach((id) => {
         if(used.has(id)) return
