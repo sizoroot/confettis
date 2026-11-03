@@ -17,6 +17,9 @@ Confettis is a tiny, dependency-free library to add confetti to your website. Ye
 * 🟡 Circle confetti (snow?)
 * ✨ Different sizes, colors, speeds and gravity
 * 🗿 Static or moving confetti
+* ⚡️ Smooth on any screen: same speed at 60, 120 or 144 Hz, and the animation loop sleeps when there are no confettis
+* 🔍 Sharp on high density (retina) screens
+* 🖼️ Multiple canvases at the same time
 * 🧩 Written in TypeScript, types included
 * 😄 Super easy to use!
 
@@ -96,7 +99,7 @@ button.addEventListener('click', (event) => {
 
 ### Stop confetti
 
-Stops all animations and clears all confetti.
+Stops all animations and clears all confetti, in every canvas. It is not needed to wait for the confettis to finish: when there are none left, the animation stops by itself and starts again with the next `create`.
 
 ```js
 confetti.stop()
@@ -113,6 +116,17 @@ By default, a full-screen canvas with id `confettis` is created for you. To use 
 confetti.create({ canvas: 'my-canvas' })
 ```
 
+The canvas is resized to fit the window and it is cleared when its confettis are gone.
+
+### Multiple canvases
+
+Each call keeps its own `canvas` and `z`, so you can use several canvases at the same time (for example, one behind and one above your content):
+
+```js
+confetti.create({ canvas: 'behind', z: 0 })
+confetti.create({ canvas: 'above', z: 100 })
+```
+
 ### Server-side rendering
 
 `create` and `stop` do nothing when there is no `window`, so you can call them from SSR frameworks without extra checks. Just make sure they are triggered by something that runs in the browser (an event handler, `useEffect`, `onMounted`, etc.).
@@ -125,11 +139,11 @@ When creating a new confetti you can change the parameters to change the positio
 | :---: | :---: | :---: | --- |
 | `canvas` | `string` | `"confettis"` | Id of canvas where you are going to show the confetti. If you do not put anything, a canvas will be created with id "confettis". |
 | `count` | `number` | 100 | Number of confetti to launch. Remember that the more particles the web performance will be worse. The recommended is between 1 and 300 particles per second. |
-| `x` | `number` | 0.5 | The X position is horizontal, being 0 the left edge and 1 the right edge. |
-| `y` | `number` | 0.7 | The Y position is vertical, being 0 the upper edge and 1 the lower edge. |
-| `z` | `number` | `Number.MAX_SAFE_INTEGER` | The Z position on the page (z-index). Determine whether it is shown above or below other web elements. The higher the number, it will be shown above all (recommended). Default is Number.MAX_SAFE_INTEGER (2147483647) to overcome the height of most popular UI libs. |
+| `x` | `number` | 0.5 | The X position is horizontal and relative to the canvas, being 0 the left edge and 1 the right edge. |
+| `y` | `number` | 0.7 | The Y position is vertical and relative to the canvas, being 0 the upper edge and 1 the lower edge. |
+| `z` | `number` | `Number.MAX_SAFE_INTEGER` | The Z position on the page (z-index) of the canvas. Determine whether it is shown above or below other web elements. The higher the number, it will be shown above all (recommended). Default is Number.MAX_SAFE_INTEGER (2147483647) to overcome the height of most popular UI libs. |
 | `gravity` | `number` or `number[]` | 1 | Gravity determine how quickly the confetti will fall. You can play with this parameter to make it fall faster or slower, and you can even make the confetti rise up. |
-| `ticks` | `number` or `number[]` | 300 | Time that confetti will take to disappear (opacity). The higher the number, it will take longer to disappear. Put it in -1 to deactivate it and make it always visible. |
+| `ticks` | `number` or `number[]` | 300 | Time that confetti will take to disappear (opacity), measured in frames at 60 frames per second (300 are 5 seconds), whatever the refresh rate of the screen is. The higher the number, it will take longer to disappear. Put it in -1 to deactivate it and make it always visible. |
 | `speed` | `number` or `number[]` | 45 | Speed with which the confetti will begin to move. |
 | `scale` | `number` or `number[]` | 0.8 | Scale factor for each confetti particle. Use decimals to make the confetti smaller. Example: [ 0.8, 1, 1.3 ] |
 | `overflow` | `object` | | Allows confetti particles to exceed the canvas edges without being removed |
@@ -143,7 +157,7 @@ When creating a new confetti you can change the parameters to change the positio
 | `spread` | `number` | 70 | How far the confetti can come. In degrees (0-360) |
 | `quiet` | `boolean` | false | It allows to create static confetti. Perfect if you want `square` or `ellipse` confetti without moving when falling. |
 | `colors` | `string[]` | 8 bright colors | Array with strings of the colors you want to show the confetti. The colors must be in Hex format (#ffffff). |
-| `shapes` | `string[]` | `[ 'square', 'ellipse' ]` | An array of shapes for the confetti. See the accepted shapes below. |
+| `shapes` | `Shapes[]` | `[ 'square', 'ellipse' ]` | An array of shapes for the confetti. Only the accepted shapes below are valid, TypeScript will warn you about the others. |
 | `emojis` | `string[]` | `[ '🛸', '👽', '✨' ]` | An array of emojis used by the `emoji` shape. |
 
 
@@ -161,6 +175,8 @@ When creating a new confetti you can change the parameters to change the positio
 
 > When a parameter accepts `number[]`, one random value from the array is picked for each particle.
 
+> `0` and `false` are valid values (for example `x: 0`, `gravity: 0` or `quiet: false`), they are not replaced by the defaults.
+
 ## Development
 
 This project uses [pnpm](https://pnpm.io).
@@ -171,6 +187,25 @@ pnpm run build
 ```
 
 The build generates the CJS, ESM, UMD and minified bundles and the type definitions in `lib/`.
+
+### Tests
+
+Tests use [Vitest](https://vitest.dev) (with jsdom), including type tests for the options.
+
+```sh
+pnpm test
+pnpm run test:watch
+```
+
+### Test page
+
+To see the confettis in the browser, build the test bundle and open `test/index.html`:
+
+```sh
+pnpm run test:page
+```
+
+The bundle is generated in `dist/` (ignored by git), so `lib/` is not modified.
 
 ## Contributors
 All issue reports, feature requests, pull requests and github stars are welcomed and much appreciated.
