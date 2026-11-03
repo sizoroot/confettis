@@ -26,6 +26,7 @@ export type ConfettiGlobals = {
     angle: number
     spread: number
     quiet: boolean
+    disableForReducedMotion: boolean
 
     shapes: Shapes[]
     colors: string[]
@@ -61,16 +62,22 @@ export type ConfettiProps = {
     angle?: number
     spread?: number
     quiet?: boolean
-
+    disableForReducedMotion?: boolean
     shapes?: Shapes[]
     colors?: string[]
     emojis?: string[]
 
 }
 
+export type ConfettiBatch = {
+    remaining: number
+    resolve: () => void
+}
+
 export type ConfettiProperties = {
 
     canvas: string
+    batch: ConfettiBatch
 
     random: number
     angle2d: number
@@ -78,7 +85,7 @@ export type ConfettiProperties = {
     progress: number
     lifetime: number
 
-    wabble: {
+    wobble: {
         w: number
         x: number
         y: number

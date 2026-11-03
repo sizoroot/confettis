@@ -2,7 +2,7 @@
 
 Release 3 nov 2026
 
-### 0.4.2
+### 0.5.0
 
   * Update dev dependencies
   * Removed Deno instalation on README.md (obsolete runtime)
@@ -20,6 +20,12 @@ Release 3 nov 2026
   * Added support for high density screens, canvas is sharp now
   * `stop` does nothing on the server (SSR) instead of throwing an error
   * Improved types, removed `any` and a shape map is used instead of conditions
+  * `create` now returns a promise resolved when the confettis of that call are gone or stopped
+  * `stop` accepts an optional canvas id to stop only that canvas
+  * Added `disableForReducedMotion` option to not create confettis when the user prefers reduced motion
+  * Fixed `require('confettis')`, added `exports` (the CJS bundle is now `lib/confettis.cjs`) and `sideEffects: false` to `package.json`
+  * Renamed internal `wabble` to `wobble`
+  * Added CI workflow (typecheck, tests and build) and `typecheck` script
   * Added tests and a test page
 
 Release 14 dec 2025

@@ -359,3 +359,140 @@ describe('high density screens', () => {
     })
 
 })
+
+describe('promise', () => {
+
+    const track = (promise: Promise<void>): { done: boolean } => {
+        const state = { done: false }
+        promise.then(() => { state.done = true })
+        return state
+    }
+
+    it('is resolved when the confettis of the call are gone', async () => {
+
+        const state = track(createConfetti({ count: 10, ticks: 3 }))
+
+        frame()
+        await Promise.resolve()
+        expect(state.done).toBe(false)
+
+        runUntilIdle()
+        await Promise.resolve()
+        expect(state.done).toBe(true)
+
+    })
+
+    it('does not wait for the confettis of other calls', async () => {
+
+        const short = track(createConfetti({ count: 10, ticks: 3 }))
+        const long = track(createConfetti({ count: 10, ticks: 60 }))
+
+        for (let i = 0; i < 6; i++) frame()
+        await Promise.resolve()
+
+        expect(short.done).toBe(true)
+        expect(long.done).toBe(false)
+
+    })
+
+    it('is resolved when stopped', async () => {
+
+        const state = track(createConfetti({ count: 10, ticks: 60 }))
+
+        stop()
+        await Promise.resolve()
+
+        expect(state.done).toBe(true)
+
+    })
+
+    it('is resolved when there are no confettis to create', async () => {
+        const state = track(createConfetti({ count: 0 }))
+        await Promise.resolve()
+        expect(state.done).toBe(true)
+    })
+
+})
+
+describe('stop a canvas', () => {
+
+    it('stops only the confettis of that canvas', async () => {
+
+        createConfetti({ canvas: 'a', count: 10, ticks: 60 })
+        createConfetti({ canvas: 'b', count: 5, ticks: 60 })
+
+        stop('a')
+
+        expect(frame()).toBe(5)
+        expect(canvasEvents['a']).toBeUndefined()
+        expect(nextFrame).not.toBeNull()
+
+    })
+
+    it('resolves the promise of the stopped canvas only', async () => {
+
+        let doneA = false
+        let doneB = false
+
+        createConfetti({ canvas: 'a', count: 10, ticks: 60 }).then(() => { doneA = true })
+        createConfetti({ canvas: 'b', count: 10, ticks: 60 }).then(() => { doneB = true })
+
+        stop('a')
+        await Promise.resolve()
+
+        expect(doneA).toBe(true)
+        expect(doneB).toBe(false)
+
+    })
+
+    it('stops the animation when it was the last canvas', () => {
+
+        createConfetti({ canvas: 'a', count: 10, ticks: 60 })
+
+        stop('a')
+
+        expect(nextFrame).toBeNull()
+
+    })
+
+    it('does nothing when the canvas has no confettis', () => {
+
+        createConfetti({ canvas: 'a', count: 10, ticks: 60 })
+
+        stop('missing')
+
+        expect(frame()).toBe(10)
+
+    })
+
+})
+
+describe('reduced motion', () => {
+
+    const preferReducedMotion = (matches: boolean) => {
+        vi.stubGlobal('matchMedia', (query: string) => ({ matches: matches && query === '(prefers-reduced-motion: reduce)' }))
+    }
+
+    it('creates confettis by default', () => {
+        preferReducedMotion(true)
+        createConfetti({ count: 10 })
+        expect(nextFrame).not.toBeNull()
+    })
+
+    it('does nothing when the user prefers reduced motion', async () => {
+
+        preferReducedMotion(true)
+
+        await createConfetti({ count: 10, disableForReducedMotion: true })
+
+        expect(nextFrame).toBeNull()
+
+    })
+
+    it('creates confettis when the user does not prefer reduced motion', () => {
+        preferReducedMotion(false)
+        createConfetti({ count: 10, disableForReducedMotion: true })
+        expect(nextFrame).not.toBeNull()
+    })
+
+})

@@ -2,15 +2,22 @@ import { ConfettiGlobals, RGB } from './types'
 import { getCanvasPos } from './canvas'
 
 /**
- * Generate random number between two numbers (min/max)
+ * Generates a random floating point number within a range.
+ *
+ * @param {number} min - Lower bound of the range (inclusive)
+ * @param {number} max - Upper bound of the range (exclusive)
+ * @returns {number} Random number between `min` and `max`
  */
 export const randomNumber = (min: number, max: number) => Math.random() * (max - min) + min
 
 /**
- * Convert hex format to RGB for opacity support (RGBA)
+ * Converts a hex color into its RGB channels, so an opacity can be applied later (RGBA).
+ *
+ * @param {string} hex - Six digit hex color, with or without the leading `#` (e.g. `#33ffdd`)
+ * @returns {RGB | null} Object with the `r`, `g` and `b` channels (0 to 255), or `null` if the format is invalid
  */
 export const convertHexToRGB = (hex: string): RGB | null => {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
     return result ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
@@ -19,9 +26,11 @@ export const convertHexToRGB = (hex: string): RGB | null => {
 }
 
 /**
- * Is SSR is a way to check if the function are running on the server.
- * When rendering on server there is no window.requestAnimationFrame(),
- * and if so we deactivate the lib so that it is not executed.
+ * Flag that indicates whether the code is running on the server (SSR).
+ * When rendering on the server there is no `window.requestAnimationFrame()`, so the library
+ * is deactivated to avoid executing browser only code.
+ *
+ * @type {boolean} `true` when `window` or `requestAnimationFrame` are not available
  */
 export const isSSR = (() => {
     if (typeof window === 'undefined' || typeof window.requestAnimationFrame === 'undefined') return true
@@ -29,14 +38,20 @@ export const isSSR = (() => {
 })()
 
 /**
- * Checking if the parameter is a number.
+ * Checks whether a value is of type number.
+ *
+ * @param {any} param - Value to check
+ * @returns {boolean} `true` if the value is a number, `false` otherwise
  */
 export const isNumber = (param: any) => {
     return typeof param === 'number'
 }
 
 /**
- * Returns the number or a random item when it is a list of numbers.
+ * Resolves a value that can be either a single number or a list of numbers.
+ *
+ * @param {number | number[]} value - A number, or a list to pick a random item from
+ * @returns {number} The number itself, or a random item of the list
  */
 const randomItem = (value: number | number[]): number => {
     if (Array.isArray(value)) return value[Math.floor(randomNumber(0, value.length))]
@@ -44,14 +59,25 @@ const randomItem = (value: number | number[]): number => {
 }
 
 /**
- * Converts the relative position (0 to 1) of the props to the canvas position in pixels.
+ * Converts the relative position (0 to 1) of the props into a canvas position in pixels.
+ * Each coordinate falls back to the global value when it is not set in the props.
+ *
+ * @param {any} props - Confetti props, it may include `canvas`, `x` and `y`
+ * @param {ConfettiGlobals} globals - Global defaults used when a prop is missing
+ * @returns {{ x: number, y: number }} Position in CSS pixels inside the canvas
  */
 export const convertPosition = (props: any, globals: ConfettiGlobals): { x: number, y: number } => {
     return getCanvasPos({ id: props?.canvas, x: props?.x ?? globals.x, y: props?.y ?? globals.y })
 }
 
 /**
- * Checks if there is a prop and if there isn't then returns a default value.
+ * Resolves the final value of every confetti property. Each one falls back to the global default
+ * when it is not set in the props, and properties that accept a list (`gravity`, `scale`, `speed`
+ * and `ticks`) are resolved to a single random item.
+ *
+ * @param {any} props - Confetti props that override the globals
+ * @param {ConfettiGlobals} globals - Global defaults used when a prop is missing
+ * @returns {any} Object with the resolved properties, ready to create a confetti piece
  */
 export const convertProps = (props: any, globals: ConfettiGlobals): any => {
 

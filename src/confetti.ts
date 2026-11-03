@@ -1,6 +1,6 @@
 import { getCanvas, getCanvasSize, getCanvasContext, clearCanvas, setCanvasZIndex, setCanvasWindowSize } from './canvas'
 import { randomNumber, convertHexToRGB, isSSR, convertPosition, convertProps } from './utils'
-import { ConfettiProperties, ConfettiGlobals, ConfettiProps, RGB } from './types'
+import { ConfettiProperties, ConfettiBatch, ConfettiGlobals, ConfettiProps, RGB } from './types'
 
 import emojiShape from './shapes/emoji'
 import ellipseShape from './shapes/ellipse'
@@ -39,7 +39,7 @@ let confettiGlobals: ConfettiGlobals = {
     angle: 90,
     spread: 70,
     quiet: false,
-
+    disableForReducedMotion: false,
     shapes: [ 'square', 'ellipse' ],
     colors: [ '#33ffdd', '#29c6ff', '#b980ff', '#ff66ff', '#ff6685', '#ffb54d', '#fcff66', '#91ff66' ],
     emojis: [ '🛸', '👽', '✨' ]
@@ -65,8 +65,19 @@ const shapeRenderers: { [shape: string]: (context: CanvasRenderingContext2D, fet
     triangle: triangleShape
 }
 
+/**
+ * Resizes every canvas in use to the current window size. It is registered as the window `resize` listener.
+ *
+ * @returns {void}
+ */
 const resizeConfetti = () => { canvases.forEach((id) => setCanvasWindowSize(id)) }
 
+/**
+ * Starts the render loop and the window `resize` listener the first time confetti is created.
+ * It does nothing on the server or if it was already started.
+ *
+ * @returns {void}
+ */
 const initConfetti = () => {
     if (isSSR) return
     if (confettiInitialized) return
@@ -76,38 +87,56 @@ const initConfetti = () => {
 }
 
 /**
- * Create confetti
+ * Creates a burst of confetti. The props override the global defaults, and the canvas is created
+ * if it does not exist yet. It does nothing on the server, or when `disableForReducedMotion` is
+ * enabled and the user prefers reduced motion.
  *
- * @return {void}
+ * @param {ConfettiProps} [props] - Options of this burst (count, position, colors, shapes, physics...)
+ * @returns {Promise<void>} Resolved when all the confettis of this call are gone or stopped
  */
-const createConfetti = (props?: ConfettiProps): void => {
+const createConfetti = (props?: ConfettiProps): Promise<void> => {
 
-    if (isSSR) return
+    if (isSSR) return Promise.resolve()
 
     const options = { ...confettiGlobals, ...props } as ConfettiGlobals
 
-    if(!canvases.has(options.canvas)) setCanvasWindowSize(options.canvas)
-    canvases.add(options.canvas)
+    if(options.disableForReducedMotion && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return Promise.resolve()
 
-    if(options.z < Number.MAX_SAFE_INTEGER) setCanvasZIndex(options.canvas, options.z)
+    return new Promise<void>((resolve) => {
 
-    const position = convertPosition(options, confettiGlobals)
-    const colors = convertProps(options, confettiGlobals).colors.map((color: string) => convertHexToRGB(color) as unknown as RGB)
+        const batch: ConfettiBatch = { remaining: options.count, resolve: resolve }
 
-    for (let i = 0; i < options.count; i++) {
-        fettis.push(confettiProperties(options, position, colors))
-    }
+        if(!canvases.has(options.canvas)) setCanvasWindowSize(options.canvas)
+        canvases.add(options.canvas)
 
-    initConfetti()
+        if(options.z < Number.MAX_SAFE_INTEGER) setCanvasZIndex(options.canvas, options.z)
+
+        const position = convertPosition(options, confettiGlobals)
+        const colors = convertProps(options, confettiGlobals).colors.map((color: string) => convertHexToRGB(color) as unknown as RGB)
+
+        for (let i = 0; i < options.count; i++) {
+            fettis.push(confettiProperties(options, batch, position, colors))
+        }
+
+        if(batch.remaining <= 0) resolve()
+
+        initConfetti()
+
+    })
 
 }
 
 /**
- * Confetti properties
+ * Builds the initial state of a single confetti piece, resolving its random properties
+ * (color, shape, emoji, launch direction, speed...).
  *
- * @return {ConfettiProperties}
+ * @param {ConfettiGlobals} options - Merged global defaults and props of the burst
+ * @param {ConfettiBatch} batch - Batch of the burst the piece belongs to
+ * @param {{ x: number, y: number }} position - Launch position in CSS pixels
+ * @param {RGB[]} colors - Available colors, one of them is picked randomly
+ * @returns {ConfettiProperties} The initial properties of the confetti piece
  */
-const confettiProperties = (options: ConfettiGlobals, position: { x: number, y: number }, colors: RGB[]): ConfettiProperties => {
+const confettiProperties = (options: ConfettiGlobals, batch: ConfettiBatch, position: { x: number, y: number }, colors: RGB[]): ConfettiProperties => {
 
     const props = convertProps(options, confettiGlobals)
 
@@ -120,6 +149,7 @@ const confettiProperties = (options: ConfettiGlobals, position: { x: number, y: 
     return {
 
         canvas: options.canvas,
+        batch: batch,
 
         random: Math.random() + 2,
         angle2d: -radius.angle + ((0.5 * radius.spread) - (Math.random() * radius.spread)),
@@ -127,7 +157,7 @@ const confettiProperties = (options: ConfettiGlobals, position: { x: number, y: 
         progress: props.ticks,
         lifetime: props.ticks,
 
-        wabble: {
+        wobble: {
             w: Math.random() * 10,
             x: 0,
             y: 0,
@@ -169,11 +199,12 @@ const confettiProperties = (options: ConfettiGlobals, position: { x: number, y: 
 }
 
 /**
- * Update confetti
+ * Advances the physics of a confetti piece (movement, speed decay, tilt and wobble) and
+ * updates its progress. In `quiet` mode the tilt and wobble animation is disabled.
  *
- * @param {ConfettiProperties} fetti
- * @param {number} step Frames of 60 per second since the last update
- * @return {void}
+ * @param {ConfettiProperties} fetti - Confetti piece to update, it is modified in place
+ * @param {number} step - Elapsed time measured in frames of 60 per second since the last update
+ * @returns {void}
  */
 const updateConfetti = (fetti: ConfettiProperties, step: number): void => {
 
@@ -187,9 +218,9 @@ const updateConfetti = (fetti: ConfettiProperties, step: number): void => {
         fetti.tilt.cos = 0
         fetti.random = 1
 
-        fetti.wabble.w = 0
-        fetti.wabble.x = fetti.position.x + (10 * fetti.scale)
-        fetti.wabble.y = fetti.position.y + (10 * fetti.scale)
+        fetti.wobble.w = 0
+        fetti.wobble.x = fetti.position.x + (10 * fetti.scale)
+        fetti.wobble.y = fetti.position.y + (10 * fetti.scale)
 
     } else {
 
@@ -198,9 +229,9 @@ const updateConfetti = (fetti: ConfettiProperties, step: number): void => {
         fetti.tilt.cos = Math.cos(fetti.tilt.angle)
 
         fetti.random = Math.random() + 2
-        fetti.wabble.w += fetti.wabble.speed * step
-        fetti.wabble.x = fetti.position.x + ((10 * fetti.scale) * Math.cos(fetti.wabble.w))
-        fetti.wabble.y = fetti.position.y + ((10 * fetti.scale) * Math.sin(fetti.wabble.w))
+        fetti.wobble.w += fetti.wobble.speed * step
+        fetti.wobble.x = fetti.position.x + ((10 * fetti.scale) * Math.cos(fetti.wobble.w))
+        fetti.wobble.y = fetti.position.y + ((10 * fetti.scale) * Math.sin(fetti.wobble.w))
 
     }
 
@@ -210,10 +241,12 @@ const updateConfetti = (fetti: ConfettiProperties, step: number): void => {
 }
 
 /**
- *  Create confetti shape
+ * Draws a confetti piece on the canvas, using its color (fading out over its lifetime when it has
+ * opacity) and the renderer of its shape.
  *
- * @param {CanvasRenderingContext2D} context
- * @param {ConfettiProperties} fetti
+ * @param {CanvasRenderingContext2D} context - Canvas context to draw on
+ * @param {ConfettiProperties} fetti - Confetti piece to draw
+ * @returns {void}
  */
 const createConfettiShape = (context: CanvasRenderingContext2D, fetti: ConfettiProperties): void => {
 
@@ -226,9 +259,23 @@ const createConfettiShape = (context: CanvasRenderingContext2D, fetti: ConfettiP
 }
 
 /**
- * Render confetti
+ * Marks a confetti piece as finished in its batch, resolving the promise of the call
+ * when it was the last one.
  *
- * @return {void}
+ * @param {ConfettiProperties} fetti - Confetti piece that is gone or stopped
+ * @returns {void}
+ */
+const releaseConfetti = (fetti: ConfettiProperties): void => {
+    if(--fetti.batch.remaining <= 0) fetti.batch.resolve()
+}
+
+/**
+ * Render loop callback. It updates every confetti piece, removes the ones that are out of bounds
+ * or finished, clears unused canvases, draws the remaining ones and schedules the next frame.
+ * The loop is stopped when there is no confetti left.
+ *
+ * @param {number} time - Timestamp of the frame, provided by `requestAnimationFrame`
+ * @returns {void}
  */
 const renderConfetti = (time: number): void => {
 
@@ -251,7 +298,10 @@ const renderConfetti = (time: number): void => {
                      (!fetti.overflow?.bottom && fetti.position.y > size.height) ||
                      fetti.progress >= 1
 
-        if(gone) fettis.splice(index, 1)
+        if(gone) {
+            fettis.splice(index, 1)
+            releaseConfetti(fetti)
+        }
 
     }
 
@@ -277,18 +327,39 @@ const renderConfetti = (time: number): void => {
 }
 
 /**
- * Stop confettis
+ * Stops the confetti and clears the canvas. When a canvas is given, only its confettis are stopped
+ * and the render loop keeps running while other canvases are still in use. The promises of the
+ * stopped confettis are resolved. It does nothing on the server.
  *
- * @return {void}
+ * @param {string} [canvas] - Id of the canvas to stop, by default all of them
+ * @returns {void}
  */
-const stop = (): void => {
+const stop = (canvas?: string): void => {
 
     if(isSSR) return
+
+    if(canvas !== undefined) {
+
+        if(!canvases.has(canvas)) return
+
+        for (let index = fettis.length - 1; index >= 0; index--) {
+            if(fettis[index].canvas !== canvas) continue
+            releaseConfetti(fettis[index])
+            fettis.splice(index, 1)
+        }
+
+        clearCanvas(canvas)
+        canvases.delete(canvas)
+
+        if(canvases.size > 0) return
+
+    }
 
     if(animationFrame !== null) window.cancelAnimationFrame(animationFrame)
 
     window.removeEventListener('resize', resizeConfetti)
 
+    fettis.forEach((fetti) => fetti.batch.resolve())
     fettis.length = 0
 
     canvases.forEach((id) => clearCanvas(id))

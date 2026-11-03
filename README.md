@@ -6,7 +6,7 @@
 [![GitHub Commits](https://img.shields.io/github/commit-activity/t/sizoroot/confettis)](https://github.com/sizoroot/confettis/commits/main/)
 [![GitHub License](https://img.shields.io/github/license/sizoroot/confettis)](https://github.com/sizoroot/confettis/blob/main/LICENSE)
 
-# 🎉 Confettis v0.4.2
+# 🎉 Confettis v0.5.0
 
 Confettis is a tiny, dependency-free library to add confetti to your website. Yep, confettis! 🎉
 
@@ -35,7 +35,7 @@ Confettis is a tiny, dependency-free library to add confetti to your website. Ye
 
 Browser:
 ```html
-<script src="https://cdn.jsdelivr.net/npm/confettis@0.4.2/lib/confettis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/confettis@0.5.0/lib/confettis.min.js"></script>
 <script>
     confetti.create()
 </script>
@@ -105,6 +105,29 @@ Stops all animations and clears all confetti, in every canvas. It is not needed 
 confetti.stop()
 ```
 
+To stop only the confettis of one canvas, pass its id:
+
+```js
+confetti.stop('my-canvas')
+```
+
+### Wait for the confettis
+
+`create` returns a promise that is resolved when all the confettis of that call are gone (or stopped), so you can chain actions after the animation:
+
+```js
+await confetti.create({ count: 150 })
+console.log('The party is over 🎉')
+```
+
+### Reduced motion
+
+If you want to respect users who prefer reduced motion, use `disableForReducedMotion`. When their system has `prefers-reduced-motion: reduce`, `create` does nothing (and its promise is resolved right away):
+
+```js
+confetti.create({ disableForReducedMotion: true })
+```
+
 ### Custom canvas
 
 By default, a full-screen canvas with id `confettis` is created for you. To use your own, pass the id of an existing canvas:
@@ -156,6 +179,7 @@ When creating a new confetti you can change the parameters to change the positio
 | `angle` | `number` | 90 | The angle at which the confetti is going to be released. In degrees (0-360) |
 | `spread` | `number` | 70 | How far the confetti can come. In degrees (0-360) |
 | `quiet` | `boolean` | false | It allows to create static confetti. Perfect if you want `square` or `ellipse` confetti without moving when falling. |
+| `disableForReducedMotion` | `boolean` | false | When set to `true`, no confetti is created if the user prefers reduced motion (`prefers-reduced-motion: reduce`). |
 | `colors` | `string[]` | 8 bright colors | Array with strings of the colors you want to show the confetti. The colors must be in Hex format (#ffffff). |
 | `shapes` | `Shapes[]` | `[ 'square', 'ellipse' ]` | An array of shapes for the confetti. Only the accepted shapes below are valid, TypeScript will warn you about the others. |
 | `emojis` | `string[]` | `[ '🛸', '👽', '✨' ]` | An array of emojis used by the `emoji` shape. |

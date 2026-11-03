@@ -1,6 +1,6 @@
 {
     "name": "confettis",
-    "version": "0.4.2",
+    "version": "0.5.0",
     "description": "Confettis 🎉 for web!",
     "keywords": [
         "canvas",
@@ -17,7 +17,18 @@
         "url": "https://sizo.dev"
     },
     "type": "module",
-    "main": "lib/confettis.esm.js",
+    "main": "lib/confettis.cjs",
+    "module": "lib/confettis.esm.js",
+    "exports": {
+        ".": {
+            "types": "./lib/types.d.ts",
+            "import": "./lib/confettis.esm.js",
+            "require": "./lib/confettis.cjs"
+        },
+        "./lib/*": "./lib/*",
+        "./package.json": "./package.json"
+    },
+    "sideEffects": false,
     "jsdelivr": "lib/confettis.min.js",
     "types": "lib/types.d.ts",
     "homepage": "https://confettis.sizo.dev",
@@ -33,6 +44,7 @@
         "setup": "node ./build/setup.js",
         "test": "vitest run",
         "test:watch": "vitest",
+        "typecheck": "tsc --noEmit",
         "test:page": "cross-env NODE_ENV=dev rollup -c --bundleConfigAsCjs",
         "clean:lib": "rimraf lib",
         "clean:dts": "rimraf types",

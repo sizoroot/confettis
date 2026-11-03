@@ -30,7 +30,7 @@ const createFiles = () => {
 
     if(process.env.NODE_ENV === 'cjs') {
     	config.output = {
-    		file: `${distDir}/${bundleName}.js`,
+    		file: `${distDir}/${bundleName}.cjs`,
     		format: 'cjs',
     		banner: banner
     	}
